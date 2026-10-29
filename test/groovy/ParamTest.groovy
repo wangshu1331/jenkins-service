@@ -8,7 +8,7 @@ class ParamTest extends BasePipelineTest {
 
     def param
 
-    @Before
+    @Before //每次执行测试方法前都会执行这个方法
     void setUp() {
         super.setUp()
         param = loadScript('vars/param.groovy')
@@ -17,6 +17,8 @@ class ParamTest extends BasePipelineTest {
     @Test
     void testParse() {
         def output = 'a\trefs/tags/v1.0.0\nb\trefs/tags/v2.0.0\n'
+        println("output:${output}")
+        println("testParse is over")
         assertEquals(['v1.0.0', 'v2.0.0'], param.parse(output))
     }
 
@@ -25,3 +27,4 @@ class ParamTest extends BasePipelineTest {
         assertEquals([], param.parse(''))
     }
 }
+// 

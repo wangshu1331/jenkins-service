@@ -1,7 +1,7 @@
 // 查询远端仓库的 tag，供 Jenkins 参数选择使用
 def call(String url) {
-    def tags = parse(runGit(url))
-    return tags ?: ['latest']
+    // def tags = parse(runGit(url))
+    return ['a','b','c']//tags ?: ['latest']
 }
 
 // 在 controller 上执行 git，返回命令输出

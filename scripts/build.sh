@@ -1,0 +1,1 @@
+#可以在jenkinsfile中直接调用

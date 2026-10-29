@@ -1,1 +1,3 @@
+//由gradle init 生成
 rootProject.name = 'jenkins-service'
+// Gradle 是一个构建自动化工具，可以用来编译代码、管理依赖、运行单元测试和打包，和cmake 是类似的东西，这个是gradle的配置文件，和cmake的CMakeLists.txt类似

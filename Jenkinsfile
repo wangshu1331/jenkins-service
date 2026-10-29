@@ -26,6 +26,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Building platform: ${params.PLATFORM}"
+                echo "Is push: ${params.IS_PUSH}"
             }
         }
 

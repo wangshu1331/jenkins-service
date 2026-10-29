@@ -1,18 +1,24 @@
+//gradle构建脚本，主要用来声明依赖、插件、构建任务等,由gradle init 生成
+//使用gradleew脚本来进行构建，命令有 
+
 plugins {
-    id 'groovy'
+    id 'groovy' //声明使用groovy插件
 }
 
-repositories {
-    maven { url 'https://repo.jenkins-ci.org/public/' }
-    mavenCentral()
+repositories { //声明依赖的仓库
+    maven { url 'https://repo.jenkins-ci.org/public/' }//jenkins官方仓库,pipeline-unit就在这里
+    mavenCentral()//maven中心仓库
 }
 
-dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:2.4.21'
-    testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.23'
-    testImplementation 'junit:junit:4.13.2'
+dependencies { //具体需要的依赖
+//依赖坐标格式固定为： 组ID:模块名:版本号
+    implementation 'org.codehaus.groovy:groovy-all:2.4.21'//groovy语言
+    testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.23'//模拟jenkins环境
+    testImplementation 'junit:junit:4.13.2'//junit测试框架
 }
 
+//Gradle 默认的测试目录是 src/test/groovy 。
+// 而 Jenkins 共享库的约定是 vars/ 、 src/ 、 test/ 都在仓库根，所以这里把测试目录改为 test/groovy 。
 sourceSets {
     test {
         groovy {
@@ -23,7 +29,22 @@ sourceSets {
 
 test {
     testLogging {
-        events 'passed', 'failed', 'skipped'
-        exceptionFormat 'full'
+        events 'passed', 'failed', 'skipped' // - events 'passed', 'failed', 'skipped' ：终端里打印每个用例的通过/失败/跳过，而不是只显示结果
+        exceptionFormat 'full' // - exceptionFormat 'full' ：失败时打印完整堆栈，方便定位是断言失败还是空指针
+        showStandardStreams = true // 把测试过程中的标准输出和错误输出打印到终端
     }
 }
+
+// ./gradlew test
+//    │
+//    ├─① shell 执行 gradlew（shell 脚本）
+//    ├─② 脚本找到 java，启动 gradle-wrapper.jar
+//    ├─③ wrapper 读取 properties，找到缓存的 Gradle 7.6.4
+//    ├─④ 启动真正的 Gradle（守护进程），读取 build.gradle
+//    ├─⑤ 解析依赖 → 建立任务图 → 执行 test 任务
+//    └─⑥ 编译测试代码 → 派生 JVM 跑 JUnit → 输出报告
+
+//gradlew 只是 启动器 ，
+// 它拉起 wrapper → wrapper 找到本机缓存的 Gradle → Gradle 
+// 读 build.gradle 建任务图 → 依次编译、跑 JUnit → 出报告。
+// 你写的 ParamTest 只是在第 ⑥ 步被 JUnit 调用的普通人 Groovy 类。
