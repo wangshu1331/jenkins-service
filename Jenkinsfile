@@ -23,10 +23,9 @@ pipeline {
         )
         choice(
             name: 'TAG',
-            choices: param('git@github.com:gabime/spdlog.git'),
+            choices: param('https://github.com/gabime/spdlog.git'),
             description: '选择要构建的 tag'
         )
-        
     }
 
     stages {
@@ -35,7 +34,9 @@ pipeline {
                 echo "Building platform: ${params.PLATFORM}"
                 echo "Is push: ${params.IS_PUSH}"
                 echo "workspace is:${WORKSPACE}"
+                // sshAgent(['pwm_github_ssh']) {
                 sh './scripts/clone.sh'
+                // }
             }
         }
 
@@ -50,5 +51,14 @@ pipeline {
                 echo 'Start test...'
             }
         }
+        stage("FINSHED") {
+            steps {
+                post {
+                    always{ cleanWs()  } 
+                }   
+            }
+
+        }
+        
     }
 }
