@@ -21,7 +21,12 @@ class ParamTest extends BasePipelineTest {
         println("testParse is over")
         assertEquals(['v1.0.0', 'v2.0.0'], param.parse(output))
     }
-
+    @Test
+    void testRunGit(){
+        def output = param.runGit('git@github.com:gabime/spdlog.git')
+        println("output:${output}")
+    }
+    
     @Test
     void testEmpty() {
         assertEquals([], param.parse(''))

@@ -10,16 +10,23 @@ pipeline {
             choices: ['linux', 'android', 'qnx'],
             description: '选择目标平台'
         )
+        choice(
+            name: 'BUILD_MODE',
+            choices: ['latest', 'build_with_tag'],
+            // defaultValue: 'build_with_tag',
+            description: '构建模式'
+        )
         booleanParam(
-            name: 'IS_PUSH',
+            name: 'IS_TEST',
             defaultValue: false,
-            description: '是否推送镜像'
+            description: '是否测试'
         )
         choice(
             name: 'TAG',
-            choices: param('git@github.com:wangshu1331/jenkins-service.git'),
+            choices: param('git@github.com:gabime/spdlog.git'),
             description: '选择要构建的 tag'
         )
+        
     }
 
     stages {
@@ -27,12 +34,15 @@ pipeline {
             steps {
                 echo "Building platform: ${params.PLATFORM}"
                 echo "Is push: ${params.IS_PUSH}"
+                echo "workspace is:${WORKSPACE}"
+                sh './scripts/clone.sh'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Start build...'
+                sh './scripts/build.sh'
             }
         }
         stage('Test') {
